@@ -26,6 +26,7 @@ var ClearInterval = isDuk?timers.clearInterval:clearInterval;
 var http_wrap = require('rcvrcore/http_wrap');
 var https_wrap = require('rcvrcore/https_wrap');
 var ws_wrap = (isDuk)?"":require('rcvrcore/ws_wrap');
+var grpc_wrap = require('grpc');
 
 function AppSceneContext(params) {
 
@@ -618,6 +619,10 @@ AppSceneContext.prototype.include = function(filePath, currentXModule) {
       modData = filePath === 'http' ? new http_wrap(_this.accessControl) : new https_wrap(_this.accessControl);
       onImportComplete([modData, origFilePath]);
       return;
+    } else if( filePath === 'grpc' ) {
+      modData = new grpc_wrap();
+      onImportComplete([modData, origFilePath]);
+     return;
     } else if( filePath.substring(0, 9) === "px:scene.") {
       var Scene = require('rcvrcore/' + filePath.substring(3));
       if( _this.sceneWrapper === null ) {
